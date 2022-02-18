@@ -3,7 +3,13 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { isAuthenticated } from "../auth/auth";
 import Layout from "../Layout";
 import Comment from "./Comment";
-import { likePost, removePost, singlePost, unlikePost } from "./postApi";
+import {
+	likePost,
+	removePost,
+	sharePost,
+	singlePost,
+	unlikePost,
+} from "./postApi";
 
 const SinglePost = () => {
 	let navigate = useNavigate();
@@ -57,6 +63,12 @@ const SinglePost = () => {
 		}
 	};
 
+	const handleShare = () => {
+		sharePost(postId, post.postedBy?._id).then((res) => {
+			console.log(res);
+		});
+	};
+
 	return (
 		<Layout>
 			<div className='container'>
@@ -82,7 +94,7 @@ const SinglePost = () => {
 							}}
 						>
 							{isAuthenticated().user?._id && (
-								<div className=''>
+								<div className='d-inline'>
 									{likes}{" "}
 									{like?.find(
 										(like) => like === isAuthenticated().user?._id
@@ -94,6 +106,19 @@ const SinglePost = () => {
 								</div>
 							)}
 						</h3>
+						<div className=''>
+							{isAuthenticated().user?._id && (
+								<div onClick={handleShare} className='d-inline'>
+									<i
+										style={{
+											cursor: "pointer",
+											fontSize: "20px",
+										}}
+										className='fa-solid fa-share-from-square'
+									></i>
+								</div>
+							)}
+						</div>
 						<p className='card-text'>{post.body}</p>
 						<br />
 						<p className='font-italic mark'>
@@ -108,8 +133,8 @@ const SinglePost = () => {
 								back to posts
 							</Link>
 
-							{isAuthenticated().user &&
-								isAuthenticated().user._id === post?.postedBy?._id && (
+							{isAuthenticated()?.user &&
+								isAuthenticated()?.user._id === post?.postedBy?._id && (
 									<>
 										<Link
 											to={`/post/edit/${post._id}`}
@@ -128,15 +153,14 @@ const SinglePost = () => {
 						</div>
 					</div>
 				}
-				{isAuthenticated().user &&
-					isAuthenticated().user._id === post?.postedBy?._id && (
-						<Comment
-							setRun={setRun}
-							run={run}
-							postId={post._id}
-							comments={comments}
-						/>
-					)}
+				{isAuthenticated()?.user && (
+					<Comment
+						setRun={setRun}
+						run={run}
+						postId={post._id}
+						comments={comments}
+					/>
+				)}
 			</div>
 		</Layout>
 	);

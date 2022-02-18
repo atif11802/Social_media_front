@@ -138,3 +138,17 @@ export const uncommentPost = (userId, postId, comment) => {
 			return error.response.data;
 		});
 };
+
+export const sharePost = (shared, userId) => {
+	return instance
+		.put(`/users/share`, {
+			shared,
+			userId,
+		})
+		.then((res) => {
+			return res;
+		})
+		.catch(function (error) {
+			return error.response.data;
+		});
+};

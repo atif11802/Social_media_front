@@ -1,13 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const ProfileTabs = ({ user, posts }) => {
+const ProfileTabs = ({ user, posts, sharedPosts }) => {
 	const { following, followers } = user;
-	console.log(followers, following);
+	// console.log(followers, following);
 	return (
 		<div>
 			<div className='row'>
-				<div className='col-md-4'>
+				<div className='col-md-3'>
 					<h3 className='text-primary'>followers</h3>
 					<hr />
 					{followers?.map((follower, index) => (
@@ -36,7 +36,7 @@ const ProfileTabs = ({ user, posts }) => {
 						</div>
 					))}
 				</div>
-				<div className='col-md-4'>
+				<div className='col-md-3'>
 					<h3 className='text-primary'>following</h3>
 					<hr />
 					{following?.map((following, index) => (
@@ -65,7 +65,7 @@ const ProfileTabs = ({ user, posts }) => {
 						</div>
 					))}
 				</div>
-				<div className='col-md-4'>
+				<div className='col-md-3'>
 					<h3 className='text-primary'>posts</h3>
 					<hr />
 					{posts?.map((post, index) => (
@@ -78,6 +78,27 @@ const ProfileTabs = ({ user, posts }) => {
 								>
 									<div>
 										<p className='lead'>{post.title}</p>
+									</div>
+								</Link>
+							</div>
+						</div>
+					))}
+				</div>
+				<div className='col-md-3'>
+					<h3 className='text-primary'>Shared Posts</h3>
+					<hr />
+					{sharedPosts?.map((sharedpost, index) => (
+						<div key={index}>
+							<div>
+								<Link
+									to={`/post/${sharedpost._id}`}
+									className='text-primary'
+									style={{ textDecoration: "none" }}
+								>
+									<div>
+										<p className='lead'>
+											{sharedpost.title} posted by {sharedpost.postedBy.name}
+										</p>
 									</div>
 								</Link>
 							</div>

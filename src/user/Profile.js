@@ -17,6 +17,7 @@ const Profile = () => {
 	const [user, setUser] = useState({});
 	const [posts, setPosts] = useState([]);
 	const [following, setFollowing] = useState(false);
+	const [sharedPosts, setSharedPosts] = useState([]);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -24,6 +25,7 @@ const Profile = () => {
 			if (res.status === 200) {
 				let following = checkFollow(res.data[0]);
 				setFollowing(following);
+				setSharedPosts(res.data[0].shared);
 				return setUser(res.data[0]);
 			}
 		});
@@ -33,8 +35,9 @@ const Profile = () => {
 			}
 		});
 	}, [userId, navigate]);
+	console.log("d", sharedPosts);
+	console.log("user", user);
 
-	console.log("posts", posts);
 	// console.log(isAuthenticated().user._id, userId);
 
 	const checkFollow = (user) => {
@@ -76,8 +79,6 @@ const Profile = () => {
 			}
 		});
 	};
-
-	// console.log();
 
 	return (
 		<Layout>
@@ -130,7 +131,7 @@ const Profile = () => {
 						<hr />
 						<p className='lead'>{user.about}</p>
 						<hr />
-						<ProfileTabs user={user} posts={posts} />
+						<ProfileTabs user={user} posts={posts} sharedPosts={sharedPosts} />
 					</div>
 				</div>
 			</div>
