@@ -72,7 +72,7 @@ const Menu = () => {
 											className='nav-link'
 											to={`/user/${isAuthenticated().user._id}`}
 										>
-											{`${isAuthenticated().user.name.toUpperCase()}'s profile`}
+											{`${isAuthenticated().user.name}'s profile`}
 										</Link>
 									</li>
 									<li className='nav-item'>

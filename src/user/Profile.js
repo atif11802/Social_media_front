@@ -35,8 +35,8 @@ const Profile = () => {
 			}
 		});
 	}, [userId, navigate]);
-	console.log("d", sharedPosts);
-	console.log("user", user);
+	// console.log("d", sharedPosts);
+	// console.log("user", user);
 
 	// console.log(isAuthenticated().user._id, userId);
 
@@ -75,7 +75,7 @@ const Profile = () => {
 			} else {
 				setUser(data.data);
 				setFollowing(false);
-				console.log(data);
+				// console.log(data);
 			}
 		});
 	};
@@ -89,7 +89,11 @@ const Profile = () => {
 				<div className='row'>
 					<div className='col-md-6'>
 						<img
-							src='https://images.pexels.com/photos/2558605/pexels-photo-2558605.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+							src={
+								user?.cloudinary_url
+									? user.cloudinary_url
+									: "https://images.pexels.com/photos/2558605/pexels-photo-2558605.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+							}
 							className='img-fluid'
 							alt='...'
 						></img>
@@ -97,7 +101,7 @@ const Profile = () => {
 					<div className='col-md-6'>
 						<div className='lead mt-2 ml-3'>
 							<p>Hello {user && user.name}</p>
-							<p>About: {user && user.email}</p>
+							<p>Email: {user && user.email}</p>
 							<p>
 								{user && `created ${new Date(user.createdAt).toDateString()}`}
 							</p>

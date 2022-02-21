@@ -10,6 +10,7 @@ import {
 	singlePost,
 	unlikePost,
 } from "./postApi";
+import Slider from "./Slider";
 
 const SinglePost = () => {
 	let navigate = useNavigate();
@@ -68,6 +69,7 @@ const SinglePost = () => {
 			console.log(res);
 		});
 	};
+	console.log(post.postPictures);
 
 	return (
 		<Layout>
@@ -81,11 +83,14 @@ const SinglePost = () => {
 							marginRight: "10px",
 						}}
 					>
-						<img
+						{post?.postPictures?.length > 0 && (
+							<Slider postPictures={post.postPictures} />
+						)}
+						{/* <img
 							src='https://images.unsplash.com/photo-1488842817413-6e197d6d8d53?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=910&q=80'
 							alt='...'
 							style={{ height: "100%", width: "100%", objectFit: "cover" }}
-						/>
+						/> */}
 						<h3
 							onClick={likeToggle}
 							className='mt-3'

@@ -15,6 +15,7 @@ const EditProfile = () => {
 	});
 	const [success, setSuccess] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [profilePicture, setProfilePicture] = useState(null);
 
 	const navigate = useNavigate();
 
@@ -43,23 +44,56 @@ const EditProfile = () => {
 	};
 	const { name, password, email, confirmPassword, about } = userData;
 
+	const onFileChange = (event) => {
+		// Update the state
+		setProfilePicture({ selectedFile: event.target.files[0] });
+	};
+
 	const submitHandler = (e) => {
 		setLoading(true);
 		e.preventDefault();
-		if (name === "" || email === "") {
-			return setError("Please fill all the fields");
-		}
-		if (password !== confirmPassword) {
-			return setError("password and confirm password does not match");
+
+		const formData = new FormData();
+
+		// Update the formData object
+
+		if (userData.password !== userData.confirmPassword) {
+			setLoading(false);
+			return setError("Password and Confirm Password must match");
 		}
 
-		updateUser(userId, userData).then((updates) => {
+		if (name === "" || email === "") {
+			setLoading(false);
+			return setError("Please fill all the fields");
+		}
+		if (profilePicture) {
+			formData.append(
+				"profilePicture",
+				profilePicture.selectedFile,
+				profilePicture.selectedFile.name
+			);
+		}
+
+		// console.log("hello", profilePicture);
+
+		formData.append("name", userData.name);
+
+		formData.append("email", userData.email);
+
+		if (userData.password !== "") {
+			formData.append("password", userData.password);
+		}
+		if (userData.about !== "") {
+			formData.append("about", userData.about);
+		}
+
+		updateUser(userId, formData).then((updates) => {
 			setLoading(false);
 			if (updates.status === 200) {
 				if (typeof window !== "undefined") {
 					let localStorageData = JSON.parse(localStorage.getItem("token"));
 
-					localStorageData.user = updates.data;
+					localStorageData.user = updates.data.updateProfile;
 
 					localStorage.setItem("token", JSON.stringify(localStorageData));
 				}
@@ -91,6 +125,13 @@ const EditProfile = () => {
 				)}
 				{loading && <Loading />}
 				<form onSubmit={submitHandler} className='mt-1'>
+					<div className='file-field mb-4'>
+						<div className='btn btn-primary btn-sm float-left'>
+							<span>Upload Profile Picture</span>
+							<input type='file' onChange={onFileChange} />
+						</div>
+					</div>
+
 					<MDBInput
 						className='mb-4'
 						type='text'
@@ -149,7 +190,7 @@ const EditProfile = () => {
 					</MDBRow>
 
 					<MDBBtn type='submit' block>
-						Sign Up
+						Update Profile
 					</MDBBtn>
 				</form>
 			</div>

@@ -2,9 +2,9 @@ import instance from "../axios";
 
 export const create = (post) => {
 	// console.log(post);
-	const { body, title, postedBy } = post;
+
 	return instance
-		.post("/post", { body, title, postedBy })
+		.post("/post", post)
 		.then((res) => {
 			console.log(res.data.msg);
 
@@ -67,12 +67,9 @@ export const removePost = (postId) => {
 		});
 };
 
-export const updatePost = (postId, { title, body }) => {
+export const updatePost = (postId, data) => {
 	return instance
-		.put(`/post/${postId}`, {
-			title,
-			body,
-		})
+		.put(`/post/${postId}`, data)
 		.then((res) => {
 			return res;
 		})

@@ -9,17 +9,21 @@ const PostCard = ({ post }) => {
 			return str;
 		}
 	}
+	console.log(post);
 
 	return (
 		<div
 			className='card'
 			style={{ width: "18rem", marginBottom: "10px", marginRight: "10px" }}
 		>
-			<img
-				src='https://images.pexels.com/photos/8474523/pexels-photo-8474523.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940'
-				className='card-img-top'
-				alt='...'
-			/>
+			{post.postPictures.length > 0 && (
+				<img
+					src={post.postPictures[0].res}
+					className='card-img-top'
+					alt={post.title}
+				/>
+			)}
+
 			<div className='card-body'>
 				<h5 className='card-title'>{post.title}</h5>
 				<p className='card-text'>{truncateString(post.body, 20)}</p>

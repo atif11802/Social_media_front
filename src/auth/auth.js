@@ -79,7 +79,7 @@ export const deleteAccount = (userId) => {
 
 export const updateUser = (userId, user) => {
 	return instance
-		.put(`/user/${userId}`, user)
+		.patch(`/user/${userId}`, user)
 		.then((res) => {
 			return res;
 		})
