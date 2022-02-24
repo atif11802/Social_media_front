@@ -1,4 +1,5 @@
 import MainRouter from "./MainRouter";
+import instance from "./axios";
 
 function App() {
 	return (

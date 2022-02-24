@@ -97,7 +97,7 @@ const ProfileTabs = ({ user, posts, sharedPosts }) => {
 								>
 									<div>
 										<p className='lead'>
-											{sharedpost.title} posted by {sharedpost.postedBy.name}
+											{sharedpost?.title} posted by {sharedpost?.postedBy?.name}
 										</p>
 									</div>
 								</Link>

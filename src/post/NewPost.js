@@ -2,9 +2,11 @@ import React, { useRef, useState } from "react";
 import { isAuthenticated } from "../auth/auth";
 import Layout from "../Layout";
 import { create } from "./postApi";
+import { ToastContainer, toast } from "react-toastify";
 
 const NewPost = () => {
 	const inputEl = useRef(null);
+
 	const [postData, setPostData] = useState({
 		title: "",
 		body: "",
@@ -18,6 +20,17 @@ const NewPost = () => {
 		setPostPictures({ postPictures: event.target.files });
 	};
 
+	const notify = () =>
+		toast("successFully posted", {
+			position: "top-right",
+			autoClose: 2000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+		});
+
 	const { title, body } = postData;
 
 	const handleChange = (e) => {
@@ -28,20 +41,31 @@ const NewPost = () => {
 	const submitPost = () => {
 		const postedBy = isAuthenticated().user._id;
 
-		if (title === "" || body === "") {
-			return setMessage("Please fill in the required fields");
-		}
-
 		const formData = new FormData();
 		formData.append("title", title);
 		formData.append("body", body);
 		formData.append("postedBy", postedBy);
 
-		if (Object.values(postPictures.postPictures).length > 0) {
+		if (postPictures?.postPictures?.length) {
 			Object.values(postPictures.postPictures).forEach((image) => {
 				formData.append("postPictures", image);
 			});
 		}
+
+		console.log(
+			postData.title.length,
+			postData.body.length,
+			postPictures.length
+		);
+
+		if (
+			postData.title.length === 0 &&
+			postData.body.length === 0 &&
+			postPictures.length === 0
+		) {
+			return setMessage("Please fill in the required fields");
+		}
+		setMessage("");
 
 		create(formData).then((data) => {
 			if (data.status === 200) {
@@ -50,6 +74,8 @@ const NewPost = () => {
 					title: "",
 					body: "",
 				});
+				notify();
+
 				inputEl.current.value = "";
 			}
 		});
@@ -101,6 +127,17 @@ const NewPost = () => {
 					post
 				</button>
 			</div>
+			<ToastContainer
+				position='top-right'
+				autoClose={2000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+			/>
 		</Layout>
 	);
 };

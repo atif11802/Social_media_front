@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import Layout from "../Layout";
 import { singlePost, updatePost } from "./postApi";
 import Slider from "./Slider";
+import { ToastContainer, toast } from "react-toastify";
 
 const EditPost = () => {
 	const { postId } = useParams();
@@ -41,24 +42,41 @@ const EditPost = () => {
 		});
 	}, [postId]);
 
-	const submitPost = () => {
-		if (title === "" || body === "") {
-			return setMessage("Please fill in the required fields");
-		}
+	const notify = () =>
+		toast("successFully posted", {
+			position: "top-right",
+			autoClose: 2000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+		});
 
+	const submitPost = () => {
 		const formData = new FormData();
 		formData.append("title", title);
 		formData.append("body", body);
 
-		if (Object.values(images.images).length > 0) {
+		if (postPictures?.postPictures?.length) {
 			Object.values(images.images).forEach((image) => {
 				formData.append("postPictures", image);
 			});
 		}
 
+		if (
+			postData.title.length === 0 &&
+			postData.body.length === 0 &&
+			postPictures.length === 0
+		) {
+			return setMessage("Please fill in the required fields");
+		}
+		setMessage("");
+
 		updatePost(postId, formData).then((res) => {
 			if (res.status === 200) {
 				setMessage("sucessfully updated your post");
+				notify();
 			}
 		});
 	};
@@ -113,6 +131,17 @@ const EditPost = () => {
 					post
 				</button>
 			</div>
+			<ToastContainer
+				position='top-right'
+				autoClose={2000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+			/>
 		</Layout>
 	);
 };

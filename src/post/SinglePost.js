@@ -11,6 +11,7 @@ import {
 	unlikePost,
 } from "./postApi";
 import Slider from "./Slider";
+import { ToastContainer, toast } from "react-toastify";
 
 const SinglePost = () => {
 	let navigate = useNavigate();
@@ -31,6 +32,7 @@ const SinglePost = () => {
 				setLikes(res.data.likes.length);
 				setLike(res.data.likes);
 				setComments(res.data.comments);
+				console.log(res.data.likes);
 			}
 		});
 	}, [postId, run]);
@@ -46,30 +48,47 @@ const SinglePost = () => {
 		}
 	};
 
+	console.log(like?.find((like) => like));
+
 	const likeToggle = () => {
 		if (like?.find((like) => like === isAuthenticated()?.user._id)) {
-			return unlikePost(post.postedBy?._id, postId, false).then((res) => {
+			return unlikePost(isAuthenticated().user?._id, postId).then((res) => {
 				// console.log(res);
-				setLikes(res.data.likes.length);
-				setLike(res.data.likes);
+				if (res.status === 200) {
+					setLikes(res.data.likes.length);
+					setLike(res.data.likes);
+				}
 			});
 		} else if (
 			like?.find((like) => like !== isAuthenticated()?.user?._id) === undefined
 		) {
-			return likePost(post.postedBy?._id, postId).then((res) => {
+			return likePost(isAuthenticated().user?._id, postId).then((res) => {
 				// console.log(res);
-				setLikes(res.data.likes.length);
-				setLike(res.data.likes);
+				if (res.status === 200) {
+					setLikes(res.data.likes.length);
+					setLike(res.data.likes);
+				}
 			});
 		}
 	};
 
 	const handleShare = () => {
-		sharePost(postId, post.postedBy?._id).then((res) => {
-			console.log(res);
+		// console.log(postId, isAuthenticated().user?._id);
+		sharePost(postId, isAuthenticated().user?._id).then((res) => {
+			if (res.status === 200) {
+				toast("shared this post", {
+					position: "top-right",
+					autoClose: 2000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					progress: undefined,
+				});
+			}
 		});
 	};
-	console.log(post.postPictures);
+	// console.log(post?.postPictures[0].res);
 
 	return (
 		<Layout>
@@ -83,8 +102,15 @@ const SinglePost = () => {
 							marginRight: "10px",
 						}}
 					>
-						{post?.postPictures?.length > 0 && (
+						{post?.postPictures?.length > 1 && (
 							<Slider postPictures={post.postPictures} />
+						)}
+						{post?.postPictures?.length === 1 && (
+							<img
+								style={{ width: "100%", height: "200px" }}
+								src={post?.postPictures[0]?.res}
+								alt='post'
+							/>
 						)}
 						{/* <img
 							src='https://images.unsplash.com/photo-1488842817413-6e197d6d8d53?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=910&q=80'
@@ -167,6 +193,17 @@ const SinglePost = () => {
 					/>
 				)}
 			</div>
+			<ToastContainer
+				position='top-right'
+				autoClose={2000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+			/>
 		</Layout>
 	);
 };
